@@ -1,35 +1,27 @@
 #include "NKP_V2.h"
 
 void setup() {
-  NKP_V2();
-  wait();
-  set_IMU();
-}
-
-void setup1(){
-
+  NKP_V2();             
+  display.setTextColor(SSD1306_WHITE);
 }
 
 void loop() {
   display.clearDisplay();
   display.setTextSize(1);      
   display.setCursor(30, 0);        
-  display.println(F("Read angle"));
+  display.println(F("Read ADC"));
   display.setCursor(0, 15);            
-  display.println(F("X = "));
+  display.println(F("A1 = "));
   display.setCursor(38, 15);            
-  display.println(Read_angle(0));
+  display.println(ADC(1));
   display.setCursor(0, 30);            
-  display.println(F("Y = "));
+  display.println(F("A2 = "));
   display.setCursor(38, 30);             
-  display.println(Read_angle(1));
+  display.println(ADC(2));
   display.setCursor(0, 45);             
-  display.println(F("Z = "));
+  display.println(F("A3 = "));
   display.setCursor(38, 45);             
-  display.println(Read_angle(2));
+  display.println(ADC(3));
   display.display();
   delay(100);
-}
-void loop1(){
-  motor(1,100);
 }
