@@ -62,19 +62,23 @@ int i2c_request(int byte_num) {
     return 0;
   }
 }
-int ADC(uint8_t port_analog){
+int ADC_Read(uint8_t port_analog){
   int analog_data = 0;
     uint8_t buff_data[3] = {0XFF,9,port_analog};
     i2c_send_buff(buff_data,3);
     int analog_data_buffer = (i2c_request(2));
+    if(port_analog != 9){
+      analog_data_buffer = analog_data_buffer*4;
+    }
     return analog_data_buffer;
+    
 }
 
 float map_F(float x, float in_max, float out_min, float out_max) {
   return (x - 0.0) * (out_max - out_min) / (in_max - 0.0) + out_min;
 }
 float Volt_input(){
-  return (((float)ADC(9))*(3.3/1023.0)*5.05);
+  return (((float)ADC_Read(9))*(3.3/1023.0)*5.05);
 }
 void motor_control(uint8_t state, float speed) {
   if(control_voltage >= 5.0){

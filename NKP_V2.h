@@ -55,6 +55,31 @@ uint32_t _lastPosition_B;
 bool first_state_for_calribrate_B = 0;
 
 int state_IMU = 0;
+int state_boot = 0;
+
+int ADC(int _pin){
+    if(_pin == 1){return analogRead(36);}
+    else if(_pin == 2){return analogRead(39);}
+    else if(_pin == 3){return analogRead(34);}
+    else if(_pin == 4){return analogRead(32);}
+    else if(_pin == 5){return analogRead(25);}
+    else if(_pin == 6){return analogRead(26);}
+    else if(_pin == 7){return analogRead(14);}
+    
+    else if(_pin == 12){return analogRead(35);}
+    else if(_pin == 13){return analogRead(33);}
+    else if(_pin == 14){return analogRead(27);}
+
+    else if(_pin == 8){return ADC_Read(0);}
+    else if(_pin == 9){return ADC_Read(2);}
+    else if(_pin == 10){return ADC_Read(5);}
+    else if(_pin == 11){return ADC_Read(6);}
+    else if(_pin == 15){return ADC_Read(1);}
+    else if(_pin == 16){return ADC_Read(4);}
+    else if(_pin == 17){return ADC_Read(7);}
+  
+}
+
 
 void NKP_V2() {
   analogReadResolution(12);
@@ -65,7 +90,7 @@ void NKP_V2() {
   //    Serial.println("Found sensor");
   // }
   
-  if(ADC(0) == 0 and ADC(1) == 0 and ADC(2) == 0 and ADC(4) == 0 and ADC(5) == 0 and ADC(6) == 0 and ADC(7) == 0){
+  if(ADC_Read(0) == 0 and ADC_Read(1) == 0 and ADC_Read(2) == 0 and ADC_Read(4) == 0 and ADC_Read(5) == 0 and ADC_Read(6) == 0 and ADC_Read(7) == 0){
     select_conection_i2c = 1;
     Wire1.begin(16,17);
   }
@@ -116,28 +141,6 @@ void NKP_V2() {
 //   }
 // }
 
-int ADC(int _pin){
-    if(_pin == 1){return analogRead(36);}
-    else if(_pin == 2){return analogRead(39);}
-    else if(_pin == 3){return analogRead(34);}
-    else if(_pin == 4){return analogRead(32);}
-    else if(_pin == 5){return analogRead(25);}
-    else if(_pin == 6){return analogRead(26);}
-    else if(_pin == 7){return analogRead(14);}
-    
-    else if(_pin == 12){return analogRead(35);}
-    else if(_pin == 13){return analogRead(33);}
-    else if(_pin == 14){return analogRead(27);}
-
-    else if(_pin == 8){return ADC(0);}
-    else if(_pin == 9){return ADC(2);}
-    else if(_pin == 10){return ADC(5);}
-    else if(_pin == 11){return ADC(6);}
-    else if(_pin == 15){return ADC(1);}
-    else if(_pin == 16){return ADC(4);}
-    else if(_pin == 17){return ADC(7);}
-  
-}
 
 void set_IMU() {
   delay(500);
@@ -234,7 +237,12 @@ void wait() {
   delay(200);
   display.setTextSize(1);
   while (digitalRead(13) == 1) {
-    if (digitalRead(0) == 1) {
+    while(digitalRead(0) == 0){
+      state_boot +=1;
+      if(state_boot >1)state_boot = 0;
+      while(digitalRead(0) == 0);
+    }
+    if (state_boot == 0) {
       display.clearDisplay();
       display.setCursor(0, 0);
       display.println(F("A1="));
@@ -317,6 +325,7 @@ void wait() {
       display.display();
       delay(100);
     }
+     
   }
   beep();
   display.clearDisplay();
