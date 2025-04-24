@@ -197,8 +197,10 @@ int Read_angle(int angle_) {
 }
 void buzzer(int freq, int timr_delay) {
   pinMode(12, OUTPUT);
-  ledcSetup(7, 5000, 8);
-  ledcAttachPin(12, 7);
+  ledcAttachChannel(12,5000,8,7);
+  
+  // ledcSetup(7, 5000, 8);
+  // ledcAttachPin(12, 7);
   ledcWriteTone(7, freq);
   delay(timr_delay);
 }
